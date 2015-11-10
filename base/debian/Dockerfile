@@ -11,7 +11,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
 	#apt-get upgrade -y && \
-	apt-get install -y ca-certificates inotify-tools nano pwgen supervisor unrar unzip wget && \
+	#apt-get install -y ca-certificates inotify-tools nano pwgen supervisor unrar unzip wget && \
 	apt-get clean && \
 	echo -n > /var/lib/apt/extended_states
 
@@ -30,4 +30,4 @@ CMD /config/loop
 #使用哪个用户跑container
 #USER daemon
 #container内部服务开启的端口。主机上要用还得在启动container时，做host-container的端口映射：
-#EXPOSE
+EXPOSE 80
