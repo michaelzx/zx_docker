@@ -4,8 +4,6 @@ MAINTAINER Michael.Z <mail@zhangxiao.org>
 
 ADD etc /etc
 
-#为什么不放在这最后呢？
-CMD /config/loop
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -22,3 +20,5 @@ RUN useradd -u 500 core
 ADD config /config
 
 RUN chmod +x /config/loop
+
+CMD /config/loop
