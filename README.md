@@ -1,6 +1,6 @@
 # zx_docker
 个人docker库，仅供参考
 
-基础镜像：[/base/debian](tree/master/base/debian)
+基础镜像：[/base/debian](base/debian)
 
-tengine：[/service/tengine](tree/master/service/tengine)
+tengine：[/service/tengine](service/tengine)
