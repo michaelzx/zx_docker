@@ -1,5 +1,5 @@
 #base image
-FROM zx_base:latest
+FROM michaezx/debian:latest
 #作者信息
 MAINTAINER Michael.Z "mail@zhangxiao.org"
 
