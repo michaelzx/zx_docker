@@ -1,3 +1,4 @@
-deb http://http.debian.net/debian/ wheezy main contrib non-free
-deb http://http.debian.net/debian/ wheezy-updates main contrib non-free
-deb http://security.debian.org/ wheezy/updates main contrib non-free
+deb http://debian.csail.mit.edu/debian/ jessie main non-free contrib
+deb http://debian.csail.mit.edu/debian/ jessie-updates main non-free contrib
+deb-src http://debian.csail.mit.edu/debian/ jessie main non-free contrib
+deb-src http://debian.csail.mit.edu/debian/ jessie-proposed-updates main non-free contrib
