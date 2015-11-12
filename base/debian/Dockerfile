@@ -18,13 +18,13 @@ RUN apt-get update && \
 	#a-certificates inotify-tools nano pwgen supervisor unrar unzip wget && \
 	apt-get install -y wget && \
 	apt-get clean && \
-	echo -n > /var/lib/apt/extended_states && \
-	mkdir /config /data && \
-	useradd -u 500 core
-ADD config /config
-RUN chmod +x /config/loop
+	echo -n > /var/lib/apt/extended_states
+#RUN mkdir /config /data
+#RUN useradd -u 500 core
+#ADD config /config
+#RUN chmod +x /config/loop
 #container启动时执行的命令，但是一个Dockerfile中只能有一条CMD命令，多条则只执行最后一条CMD.
-CMD /config/loop
+#CMD /config/loop
 #container启动时执行的命令，但是一个Dockerfile中只能有一条ENTRYPOINT命令，如果多条，则只执行最后一条
 #ENTRYPOINT没有CMD的可替换特性
 #ENTRYPOINT ["memcached"]

@@ -3,16 +3,11 @@
 
 #使用Dockerfile构建镜像
 ```
-$ cd Dockerfile所在文件夹
-$ docker build --rm -t some-image-name .
-```
-#或者直接从Docker Hub上pull
-
-```
-$ docker pull michaelzx/debian
+$ cd path/base/debian/
+$ docker build --rm -t michaelzx/tengine .
 ```
 
 #创建本镜像容器
 ```
-$ docker run -d -p 8080:80  --name=some-container-name image-name
+$ docker run -d -p 8080:80  --name=tngx michaelzx/tengine
 ```

@@ -1,26 +1,45 @@
-#base image
 FROM michaelzx/debian:latest
-#作者信息
 MAINTAINER Michael.Z "mail@zhangxiao.org"
 
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
+#Declare tengine version environment variable
+ENV TENGINE_VERSION=2.1.1
+#Install basic requirements
 RUN apt-get install -y gcc libssl-dev libpcre3-dev make
-RUN adduser --disabled-login --gecos 'Tengine' nginx 
+#Create nginx_http_user for nginx
+RUN adduser \
+	--disabled-login \
+	--no-create-home \
+	--gecos 'Tengine_Http_User' \
+	nginx_http_user
 
-WORKDIR /home/nginx
-RUN wget http://tengine.taobao.org/download/tengine-2.1.1.tar.gz
-RUN tar zxvf tengine-2.1.1.tar.gz
-RUN rm tengine-2.1.1.tar.gz
-WORKDIR /home/nginx/tengine-2.1.1
-RUN ./configure
-RUN make
-RUN make install
+
+WORKDIR /tmp/
+#Download tengine and 
+RUN wget http://tengine.taobao.org/download/tengine-$TENGINE_VERSION.tar.gz && \
+	tar zxvf tengine-$TENGINE_VERSION.tar.gz && \
+	rm tengine-$TENGINE_VERSION.tar.gz
+
+WORKDIR /tmp/tengine-$TENGINE_VERSION
+
+RUN ./configure \
+	--prefix=/etc/nginx \
+	--conf-path=/etc/nginx/nginx.conf \
+	--sbin-path=/usr/bin/nginx \
+	--user=nginx_http_user \
+	--group=nginx_http_user && \
+	make && \
+	make install && \
+	echo "\ndaemon off;">>/etc/nginx/nginx.conf && \
+	chown -R nginx_http_user /etc/nginx
+
 RUN apt-get clean && \
-	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /home/nginx/*
-WORKDIR /usr/local/nginx/sbin/
-CMD ["./nginx", "-g", "daemon off;"]
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-EXPOSE 80
-EXPOSE 443
+#WORKDIR /etc/nginx/sbin/
+
+EXPOSE 80 443
+
+CMD ["nginx"]
