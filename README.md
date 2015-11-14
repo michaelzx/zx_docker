@@ -10,9 +10,8 @@
 
 #说明 
 * 个人`练手`和`实践`Docker之作，仅供参考
-* 实现engine+php-fpm的web应用环境
-* 采用多容器协作的方式
-* 因为在国内速度太慢，有放到Docker Hub上，需要先下载依赖镜像然后用Dockerfile进行构建。
+* 实现Tengine+php-fpm的多容器协作的web应用环境
+* 因为在国内速度太慢，没有放到Docker Hub上，需要先下载依赖镜像然后用Dockerfile进行构建。
 * 成熟以后计划会把镜像的自动构建任务放到DaoCloud上去
 * debian中sources.list使用阿里云了mirror，以便与国内网络环境下更新
 
