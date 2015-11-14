@@ -7,6 +7,6 @@
 
 #使用Dockerfile构建镜像
 ```
-$ cd path/base/debian/
+$ cd zx_docker_path/debian/
 $ docker build --rm -t michaelzx/debian .
 ```
