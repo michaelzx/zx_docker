@@ -1,0 +1,29 @@
+data_box:
+    container_name: data_box
+    image: "busybox"
+    volumes:
+        - ~/workspace/Docker/docker_data:/data
+    stdin_open: true
+mysql_box:
+    container_name: mysql_box
+    image: "mysql:5.7.9"
+    ports:
+        - "3306:3306"
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+phpfpm_box:
+    build: ./php-fpm/
+    container_name: phpfpm_box
+    volumes_from:
+        - data_box
+    links:
+        - "mysql_box:mysql_box"
+web_box:
+    build: ./tengine/
+    container_name: web_box
+    volumes_from:
+        - data_box
+    links:
+        - "phpfpm_box:phpfpm"
+    ports:
+        - "80:80"

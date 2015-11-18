@@ -2,7 +2,7 @@
 * [说明](#说明)
 * [结构图](#结构图)
 * [目录说明](#目录说明)
-* [下载依赖镜像](#下载依赖镜像)
+* [准备所需依赖镜像](#准备所需依赖镜像)
 * [如何构建镜像](#如何构建镜像)
 * [如何运行容器](#如何运行容器)
 * [遇到的坑](#遇到的坑)
@@ -29,65 +29,66 @@
 
 * /volume_data [数据容器的初始数据](/volume_data)
 
-#下载依赖镜像
+#准备所需依赖镜像
 使用DaoCloud提供的加速器先把依赖镜像先下到本地镜像库中，具体使用方式请见DaoCloud官网：[http://www.daocloud.io/](http://www.daocloud.io/)
 
 ```
 $ dao pull debian:jessie
 $ dao pull php:5.5.30-fpm
 $ dao pull busybox
+$ dao pull mysql:5.7.9
 ```
+另外还有一个`michaelzx/debian:jessie`镜像需要build，主要用于构建起他镜像。
 
-#如何构建镜像
-
-1、构建`michaelzx/debian:jessie`镜像
-
-```
-$ cd zx_docker_path/debian/
-$ docker build --rm -t michaelzx/debian:jessie .
-```
-2、构建`michaelzx/php-fpm`镜像
+本项目中的[/tengine](/tengine)是From该镜像，如果有需要的话，可以自行扩展。我就是放着备用而已。
 
 ```
-$ cd zx_docker_path/php-fpm/
-$ docker build --rm -t michaelzx/php-fpm .
-```
-3、构建`michaelzx/tengine`镜像
+$ docker build --rm -t michaelzx/debian:jessie zx_docker_path/debian/.
+```                                                  
+
+#构建和运行
+
+这里用到了docker-compose
+
+1、新建一个文件夹`/my_path/data`,将[volume_data](/volume_data)中的文件放进去。
+
+2、修改docker-compose.yml中的配置
 
 ```
-$ cd zx_docker_path/tengine/
-$ docker build --rm -t michaelzx/tengine .
+data_box:
+    container_name: data_box
+    image: "busybox"
+    volumes:
+        - ~/workspace/Docker/docker_data:/data
+    stdin_open: true
 ```
-
-4、新建一个文件夹`/your_path/data`,将[volume_data](/volume_data)中的文件放进去。
-
-#如何运行容器
-
-1、启动数据容器
-
-```
-$ docker run --name data_box -ti -d\
--v /your_path/data:/data \
-busybox
-```
-
-2、启动phpfpm容器
+把这里的`~/workspace/Docker/docker_data`改成你的`/my_path/data`
 
 ```
-$ docker run --name phpfpm -d \
---volumes-from data_box \
-michaelzx/php-fpm
-
+mysql_box:
+    container_name: mysql_box
+    image: "mysql:5.7.9"
+    ports:
+        - "3306:3306"
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
 ```
 
-3、启动tengine容器
+这里可以修改你的mysql的root密码
+
+`说明`：在mac osx下如果要挂在volume可能会出现权限问题，会无法正常启动mysql容器。
+解决方法还没找到，有知道的朋友不妨告知一下。
+
+2、build镜像
 
 ```
-$ docker run --name tngx -d \
--p 80:80 \
---link phpfpm:phpfpm \
---volumes-from data_box \
-michaelzx/tengine
+$ docker-compose build
+```
+
+3、初始化并在后台运行容器
+
+```
+$ docker-compose up -d
 ```
 
 #遇到的坑
@@ -134,7 +135,9 @@ michaelzx/tengine
 
 【解决方案】还没找到，不过正式的服务器环境应该不会有这种问题吧。
 
+###【问题二】OSX下在mysql中挂载volume的话会导致无法启动
 
+如果不挂载volume完全正常，`一直解决不了`这个问题，非常纠结，有知道的朋友还请指点一下。
 
 #Docker相关命令
 
